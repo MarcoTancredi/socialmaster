@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title neon-glow">
+            🚀 SocialMaster Platform
+        </h1>
+        <h2 class="hero-subtitle">
+            🤖 Revolutionary AI + Human Social Media Automation
+        </h2>
+        
+        <div class="status-grid">
+            <div class="status-card">
+                <div class="status-icon">🤖</div>
+                <div class="status-info">
+                    <h3>NEXUS AI</h3>
+                    <p class="status-online">OPERATIONAL</p>
+                </div>
+            </div>
+            
+            <div class="status-card">
+                <div class="status-icon">⚡</div>
+                <div class="status-info">
+                    <h3>System Status</h3>
+                    <p class="status-online">{{ status }}</p>
+                </div>
+            </div>
+            
+            <div class="status-card">
+                <div class="status-icon">🏆</div>
+                <div class="status-info">
+                    <h3>Competition</h3>
+                    <p class="status-warning">Day {{ day }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <a href="/api/docs" class="btn btn-primary neon-button">
+                📚 API Documentation
+            </a>
+            <a href="/api/status" class="btn btn-secondary neon-button">
+                📊 System Status
+            </a>
+            <a href="/health" class="btn btn-accent neon-button">
+                💚 Health Check
+            </a>
+        </div>
+
+        <div class="features-preview">
+            <h3 class="features-title">🎯 Platform Features</h3>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <span class="feature-icon">🔐</span>
+                    <span class="feature-text">Multi-Platform Auth</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📅</span>
+                    <span class="feature-text">Smart Scheduling</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🤖</span>
+                    <span class="feature-text">AI Content Gen</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">📊</span>
+                    <span class="feature-text">Real-time Analytics</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">🌐</span>
+                    <span class="feature-text">9+ Platforms</span>
+                </div>
+                <div class="feature-item">
+                    <span class="feature-icon">⚡</span>
+                    <span class="feature-text">CloudFlare Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="competition-info">
+            <h3 class="competition-title">🏆 Competition Progress</h3>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 15%"></div>
+                </div>
+                <p class="progress-text">Foundation Complete - Ready for CloudFlare Integration</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

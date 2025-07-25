@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - SocialMaster</title>
+    <link rel="stylesheet" href="/static/neon.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-neon">
+    <div class="container-neon">
+        <h2 class="title-neon">SocialMaster - Login</h2>
+        <form method="post" action="/login" class="form-neon">
+            <input type="text" name="username" placeholder="Usuário ou E-mail" required>
+            <input type="password" name="password" placeholder="Senha" required>
+            <div class="form-row">
+                <input type="checkbox" name="keep_logged" id="keep_logged">
+                <label for="keep_logged">Manter-me conectado</label>
+            </div>
+            <button type="submit" class="btn-neon">Entrar</button>
+            <div class="links-neon">
+                <a href="#">Esqueci a senha</a> |
+                <a href="#">Primeiro acesso? Cadastre-se.</a>
+            </div>
+        </form>
+        {% if msg %}
+        <div class="msg-neon">{{msg}}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

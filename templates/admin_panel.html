@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Painel Admin - SocialMaster</title>
+    <link rel="stylesheet" href="/static/neon.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body class="bg-neon">
+    <div class="container-neon">
+        <h2 class="title-neon">Painel do Administrador</h2>
+        <h3>Pedidos de cadastro pendentes:</h3>
+        {% if pending %}
+        <ul>
+            {% for u in pending %}
+            <li>
+                {{ u.user }} ({{ u.email }}) 
+                <form method="post" action="/admin/approve/{{u.id}}" style="display:inline">
+                    <button class="btn-neon" type="submit">Liberar</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>Não há cadastros pendentes.</p>
+        {% endif %}
+        <a href="/login" class="btn-neon">Sair</a>
+    </div>
+</body>
+</html>

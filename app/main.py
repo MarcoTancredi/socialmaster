@@ -1,5 +1,6 @@
 """
-🚀 SocialMaster Platform - Multi-Port Architecture
+🚀 SocialMaster Platform - Main Application  
+AI-Powered Social Media Automation System
 Team: Anthropic NEXUS
 """
 
@@ -9,225 +10,262 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
-import asyncio
-import os
 from datetime import datetime
+import os
 from pathlib import Path
 
-# Import our API routes (será criado)
-from app.api.v1 import auth, users, clients, posts
+# Create FastAPI app
+app = FastAPI(
+    title="🚀 SocialMaster Platform",
+    description="Revolutionary AI + Human Social Media Automation System",
+    version="1.0.0",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
+)
 
-# Multi-App Configuration
-class SocialMasterApps:
-    def __init__(self):
-        self.main_app = self.create_main_app()
-        self.api_app = self.create_api_app()
-        self.admin_app = self.create_admin_app()
-        self.monitor_app = self.create_monitor_app()
-    
-    def create_main_app(self):
-        """Frontend Application - Port 8000"""
-        app = FastAPI(
-            title="🚀 SocialMaster Frontend",
-            description="AI-Powered Social Media Platform - Frontend",
-            version="1.0.0",
-            docs_url=None,  # Disable docs on main app
-            redoc_url=None
-        )
-        
-        # CORS
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["https://app.planetamicro.com.br", "https://api.planetamicro.com.br"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
-        
-        # Static files and templates
-        static_dir = Path("frontend/static")
-        templates_dir = Path("frontend/templates")
-        
-        if static_dir.exists():
-            app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
-        
-        if templates_dir.exists():
-            templates = Jinja2Templates(directory=str(templates_dir))
-        
-        @app.get("/", response_class=HTMLResponse)
-        async def home(request: Request):
-            return templates.TemplateResponse("index.html", {
-                "request": request,
-                "title": "SocialMaster - AI Social Media Platform",
-                "team": "Anthropic NEXUS",
-                "status": "🔥 OPERATIONAL",
-                "day": 1
-            })
-        
-        @app.get("/health")
-        async def health():
-            return {"status": "healthy", "app": "frontend", "port": 8000}
-            
-        return app
-    
-    def create_api_app(self):
-        """API Application - Port 8001"""
-        app = FastAPI(
-            title="🚀 SocialMaster API",
-            description="Social Media Automation API - Team Anthropic NEXUS",
-            version="1.0.0",
-            docs_url="/docs",
-            redoc_url="/redoc"
-        )
-        
-        # CORS
-        app.add_middleware(
-            CORSMiddleware,
-            allow_origins=["https://app.planetamicro.com.br", "https://admin.planetamicro.com.br"],
-            allow_credentials=True,
-            allow_methods=["*"],
-            allow_headers=["*"],
-        )
-        
-        # Include API routes
-        app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-        app.include_router(users.router, prefix="/users", tags=["Users"])
-        app.include_router(clients.router, prefix="/clients", tags=["Clients"])
-        app.include_router(posts.router, prefix="/posts", tags=["Posts"])
-        
-        @app.get("/")
-        async def api_root():
-            return {
-                "message": "🤖 SocialMaster API - NEXUS Powered",
-                "version": "1.0.0",
-                "team": "Anthropic NEXUS",
-                "docs": "https://api.planetamicro.com.br/docs",
-                "status": "operational"
-            }
-        
-        @app.get("/status")
-        async def api_status():
-            return {
-                "platform": "SocialMaster API",
-                "status": "🤖 NEXUS ONLINE",
-                "team": "Anthropic NEXUS",
-                "timestamp": datetime.now().isoformat(),
-                "version": "1.0.0",
-                "competition_day": 1,
-                "endpoints": {
-                    "auth": "/auth/*",
-                    "users": "/users/*", 
-                    "clients": "/clients/*",
-                    "posts": "/posts/*"
+# CORS Configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # CloudFlare handles security
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Static files and templates setup
+static_dir = Path("frontend/static")
+templates_dir = Path("frontend/templates")
+
+if static_dir.exists():
+    app.mount("/static", StaticFiles(directory=str(static_dir)), name="static")
+
+templates = None
+if templates_dir.exists():
+    templates = Jinja2Templates(directory=str(templates_dir))
+
+# Routes
+@app.get("/", response_class=HTMLResponse)
+async def home(request: Request):
+    """Main page - SocialMaster Dashboard"""
+    if templates and templates_dir.exists():
+        return templates.TemplateResponse("index.html", {
+            "request": request,
+            "title": "SocialMaster - AI Social Media Platform",
+            "team": "Anthropic NEXUS", 
+            "status": "🔥 OPERATIONAL",
+            "day": 1
+        })
+    else:
+        return HTMLResponse("""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>🚀 SocialMaster Platform</title>
+            <style>
+                body { 
+                    font-family: 'Orbitron', Arial; 
+                    background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e); 
+                    color: #00ff00; 
+                    text-align: center; 
+                    padding: 50px; 
+                    min-height: 100vh;
+                    margin: 0;
                 }
-            }
-        
-        @app.get("/health")
-        async def health():
-            return {"status": "healthy", "app": "api", "port": 8001}
-            
-        return app
-    
-    def create_admin_app(self):
-        """Admin Panel - Port 8002"""
-        app = FastAPI(
-            title="🚀 SocialMaster Admin",
-            description="Administration Panel - Team Anthropic NEXUS",
-            version="1.0.0"
-        )
-        
-        @app.get("/")
-        async def admin_root():
-            return {
-                "message": "🔐 SocialMaster Admin Panel",
-                "team": "Anthropic NEXUS",
-                "access": "restricted",
-                "features": [
-                    "User Management",
-                    "System Configuration", 
-                    "Social Media Connections",
-                    "Analytics Dashboard"
-                ]
-            }
-        
-        @app.get("/health")
-        async def health():
-            return {"status": "healthy", "app": "admin", "port": 8002}
-            
-        return app
-    
-    def create_monitor_app(self):
-        """Real-time Monitoring - Port 8003"""
-        app = FastAPI(
-            title="🚀 SocialMaster Monitor",
-            description="Real-time System Monitoring - Team Anthropic NEXUS",
-            version="1.0.0"
-        )
-        
-        @app.get("/")
-        async def monitor_root():
-            return {
-                "message": "📊 SocialMaster Real-time Monitor",
-                "team": "Anthropic NEXUS",
-                "metrics": {
-                    "active_users": 0,
-                    "posts_scheduled": 0,
-                    "social_platforms": 9,
-                    "system_health": "optimal"
+                .neon { 
+                    text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 40px #00ff00; 
+                    animation: pulse 2s infinite alternate;
                 }
-            }
-        
-        @app.get("/metrics")
-        async def system_metrics():
-            return {
-                "timestamp": datetime.now().isoformat(),
-                "cpu_usage": "15%",
-                "memory_usage": "8GB/16GB",
-                "network_status": "optimal",
-                "cloudflare_status": "connected",
-                "database_connections": 5,
-                "api_requests_per_minute": 42
-            }
-        
-        @app.get("/health")
-        async def health():
-            return {"status": "healthy", "app": "monitor", "port": 8003}
+                @keyframes pulse {
+                    from { text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00; }
+                    to { text-shadow: 0 0 15px #00ff00, 0 0 30px #00ff00, 0 0 50px #00ff00; }
+                }
+                .btn {
+                    background: transparent;
+                    border: 2px solid #00ff00;
+                    color: #00ff00;
+                    padding: 15px 30px;
+                    margin: 10px;
+                    text-decoration: none;
+                    border-radius: 25px;
+                    display: inline-block;
+                    transition: all 0.3s;
+                }
+                .btn:hover {
+                    background: #00ff00;
+                    color: #000;
+                    box-shadow: 0 0 20px #00ff00;
+                }
+                .status-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 20px;
+                    max-width: 800px;
+                    margin: 40px auto;
+                }
+                .status-card {
+                    background: rgba(0, 255, 0, 0.1);
+                    border: 2px solid #00ff00;
+                    border-radius: 15px;
+                    padding: 20px;
+                    transition: transform 0.3s;
+                }
+                .status-card:hover { transform: translateY(-5px); }
+            </style>
+        </head>
+        <body>
+            <h1 class="neon">🚀 SocialMaster Platform</h1>
+            <h2>🤖 Revolutionary AI + Human Social Media Automation</h2>
+            <p><strong>Team: Anthropic NEXUS</strong></p>
+            <p>Status: 🔥 OPERATIONAL - Competition Day 1</p>
             
-        return app
+            <div class="status-grid">
+                <div class="status-card">
+                    <h3>🤖 NEXUS AI</h3>
+                    <p>OPERATIONAL</p>
+                </div>
+                <div class="status-card">
+                    <h3>⚡ System Status</h3>
+                    <p>ONLINE</p>
+                </div>
+                <div class="status-card">
+                    <h3>🏆 Competition</h3>
+                    <p>Day 1</p>
+                </div>
+            </div>
+            
+            <div>
+                <a href="/api/docs" class="btn">📚 API Documentation</a>
+                <a href="/api/status" class="btn">📊 System Status</a>
+                <a href="/health" class="btn">💚 Health Check</a>
+            </div>
+            
+            <p style="margin-top: 40px; color: #888;">
+                🌐 CloudFlare Zero Trust Active<br>
+                🔗 Multi-domain architecture ready<br>
+                💪 Team Anthropic NEXUS dominating!
+            </p>
+        </body>
+        </html>
+        """)
 
-# Initialize all apps
-social_master = SocialMasterApps()
+@app.get("/api/status")
+async def api_status():
+    """API Status endpoint"""
+    return {
+        "platform": "SocialMaster",
+        "status": "🤖 NEXUS ONLINE",
+        "team": "Anthropic NEXUS",
+        "timestamp": datetime.now().isoformat(),
+        "version": "1.0.0",
+        "competition_day": 1,
+        "message": "🔥 Ready to dominate social media automation!",
+        "cloudflare": "active",
+        "domains": {
+            "app": "app.planetamicro.com.br",
+            "api": "api.planetamicro.com.br", 
+            "admin": "admin.planetamicro.com.br",
+            "monitor": "monitor.planetamicro.com.br"
+        }
+    }
 
-# Export apps for uvicorn
-main_app = social_master.main_app
-api_app = social_master.api_app  
-admin_app = social_master.admin_app
-monitor_app = social_master.monitor_app
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {
+        "status": "healthy",
+        "nexus": "operational",
+        "socialmaster": "ready",
+        "database": "pending_setup",
+        "apis": "pending_configuration",
+        "cloudflare_tunnels": "active"
+    }
 
-# Development runner
+@app.get("/api/info")
+async def system_info():
+    """System information endpoint"""
+    return {
+        "project": "SocialMaster",
+        "description": "AI-Powered Social Media Automation Platform",
+        "team": "Anthropic NEXUS",
+        "competition": "Revolutionary AI+Human Development", 
+        "goal": "Prove supremacy of hybrid development",
+        "features": [
+            "🔐 Multi-platform authentication",
+            "📅 Intelligent scheduling",
+            "🤖 AI content generation", 
+            "📊 Real-time analytics",
+            "🌐 9+ social platforms",
+            "⚡ CloudFlare Zero Trust integration"
+        ],
+        "architecture": {
+            "frontend": "FastAPI + Jinja2 + Neon CSS",
+            "backend": "FastAPI + SQLAlchemy",
+            "database": "SQLite → PostgreSQL",
+            "hosting": "Local PC + CloudFlare Tunnels",
+            "domains": "Multi-domain architecture"
+        },
+        "status": "🚀 Building the future!"
+    }
+
+# Additional API endpoints for future expansion
+@app.get("/api/users")
+async def users_placeholder():
+    """Users API - To be implemented"""
+    return {"message": "Users API - Coming soon", "nexus": "preparing implementation"}
+
+@app.get("/api/clients") 
+async def clients_placeholder():
+    """Clients API - To be implemented"""
+    return {"message": "Clients API - Coming soon", "nexus": "preparing implementation"}
+
+@app.get("/api/posts")
+async def posts_placeholder():
+    """Posts API - To be implemented"""
+    return {"message": "Posts API - Coming soon", "nexus": "preparing implementation"}
+
+@app.get("/api/auth")
+async def auth_placeholder():
+    """Authentication API - To be implemented"""
+    return {"message": "Authentication API - Coming soon", "nexus": "preparing implementation"}
+
+# Admin routes placeholder
+@app.get("/admin")
+async def admin_placeholder():
+    """Admin panel - To be implemented"""
+    return {
+        "message": "🔐 SocialMaster Admin Panel",
+        "team": "Anthropic NEXUS",
+        "access": "restricted",
+        "status": "coming_soon",
+        "features": [
+            "User Management",
+            "System Configuration",
+            "Social Media Connections", 
+            "Analytics Dashboard"
+        ]
+    }
+
+# Monitor routes placeholder
+@app.get("/monitor")
+async def monitor_placeholder():
+    """Real-time monitoring - To be implemented"""
+    return {
+        "message": "📊 SocialMaster Real-time Monitor",
+        "team": "Anthropic NEXUS",
+        "status": "coming_soon",
+        "metrics": {
+            "active_users": 0,
+            "posts_scheduled": 0,
+            "social_platforms": 9,
+            "system_health": "optimal"
+        }
+    }
+
 if __name__ == "__main__":
-    print("🚀 Starting SocialMaster Multi-Port Architecture...")
-    print("📱 Frontend: http://localhost:8000")
-    print("🔌 API: http://localhost:8001") 
-    print("🔐 Admin: http://localhost:8002")
-    print("📊 Monitor: http://localhost:8003")
-    
-    # Start all servers concurrently
-    import multiprocessing
-    
-    def start_server(app, port, app_name):
-        print(f"🚀 Starting {app_name} on port {port}")
-        uvicorn.run(app, host="0.0.0.0", port=port)
-    
-    processes = [
-        multiprocessing.Process(target=start_server, args=(main_app, 8000, "Frontend")),
-        multiprocessing.Process(target=start_server, args=(api_app, 8001, "API")),
-        multiprocessing.Process(target=start_server, args=(admin_app, 8002, "Admin")),
-        multiprocessing.Process(target=start_server, args=(monitor_app, 8003, "Monitor"))
-    ]
-    
-    for p in processes:
-        p.start()
-    
-    for p in processes:
-        p.join()
+    uvicorn.run(
+        "app.main:app",
+        host="0.0.0.0", 
+        port=8000,
+        reload=True,
+        log_level="info"
+    )

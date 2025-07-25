@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Painel do Usuário - SocialMaster</title>
+    <title>Painel Usuário</title>
     <link rel="stylesheet" href="/static/neon.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-<body class="bg-neon">
-    <div class="container-neon">
-        <h2 class="title-neon">Bem-vindo, {{ user.user }}</h2>
-        <p>Você está autenticado como usuário comum.</p>
-        <a href="/login" class="btn-neon">Sair</a>
+<body>
+    <div class="neon-card">
+        <h2>Bem-vindo, {{ user.user }}!</h2>
+        <p>Sua conta está ativa. Em breve, novas funcionalidades.</p>
+        <a href="/logout">Sair</a>
     </div>
 </body>
 </html>

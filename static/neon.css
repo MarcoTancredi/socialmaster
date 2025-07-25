@@ -1,80 +1,9 @@
-body.bg-neon {
-    background: #181A20;
-    color: #fff;
-    font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-.container-neon {
-    max-width: 340px;
-    margin: 60px auto;
-    padding: 2em 2em 2em 2em;
-    border-radius: 15px;
-    background: rgba(24,26,32,0.93);
-    box-shadow: 0 0 32px #07f8d9, 0 0 8px #181A20;
-}
-.title-neon {
-    text-align: center;
-    margin-bottom: 1em;
-    color: #07f8d9;
-    text-shadow: 0 0 10px #07f8d9, 0 0 6px #181A20;
-}
-.form-neon input[type="text"],
-.form-neon input[type="password"] {
-    width: 100%;
-    padding: 0.75em;
-    margin-bottom: 1em;
-    border: none;
-    border-radius: 7px;
-    background: #2c2f37;
-    color: #fff;
-    font-size: 1em;
-}
-.form-neon .btn-neon {
-    width: 100%;
-    padding: 0.8em;
-    background: #07f8d9;
-    color: #181A20;
-    font-weight: bold;
-    border: none;
-    border-radius: 7px;
-    box-shadow: 0 0 8px #07f8d9, 0 0 2px #181A20;
-    cursor: pointer;
-    font-size: 1.08em;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    transition: 0.2s;
-}
-.form-neon .btn-neon:hover {
-    background: #24fff8;
-    box-shadow: 0 0 24px #07f8d9;
-}
-.links-neon {
-    text-align: center;
-    margin-top: 1em;
-}
-.links-neon a {
-    color: #07f8d9;
-    text-decoration: none;
-}
-.form-row {
-    margin-bottom: 0.7em;
-    display: flex;
-    align-items: center;
-    gap: 0.4em;
-}
-.msg-neon {
-    background: #1a2d2a;
-    color: #07f8d9;
-    border-radius: 8px;
-    text-align: center;
-    margin-top: 1.2em;
-    padding: 0.8em 0.4em;
-    box-shadow: 0 0 8px #07f8d9;
-    animation: fadeout 3.5s forwards;
-}
-@keyframes fadeout {
-    0% { opacity: 1; }
-    80% { opacity: 1;}
-    100% { opacity: 0;}
-}
+body { background: #161616; color: #eee; font-family: Arial, sans-serif; }
+.neon-card { background: #232323; border-radius: 18px; padding: 24px; margin: 50px auto; width: 340px; box-shadow: 0 0 22px #0ff, 0 0 8px #0ff6; }
+input, button { margin: 7px 0; width: 100%; padding: 8px; border-radius: 6px; border: none; }
+button { background: #19f5ff; color: #111; font-weight: bold; box-shadow: 0 0 7px #19f5ff99; cursor: pointer;}
+a { color: #19f5ff; text-decoration: none;}
+a:hover { text-decoration: underline; }
+table { width: 100%; margin: 10px 0; border-collapse: collapse;}
+th, td { border-bottom: 1px solid #333; padding: 6px; }
+.neon-msg { color: #19f5ff; margin-top: 15px; }
